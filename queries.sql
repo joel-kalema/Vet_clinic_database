@@ -22,17 +22,21 @@ BEGIN;
 UPDATE animals SET species = 'unspecified';
 ROLLBACK;
 
+SELECT species FROM animals;
+
 -- Update the animals table by setting the species column to digimon for all animals that have a name ending in mon.
 BEGIN;
 UPDATE animals SET species = 'digimon' WHERE name LIKE '%mon';
 -- Update the animals table by setting the species column to pokemon for all animals that don't have species already set.
-UPDATE animals SET species = 'digimon' WHERE species = '';
+UPDATE animals SET species = NULL WHERE species = '';
 -- Commit the transaction.
 COMMIT;
 -- Inside a transaction delete all records in the animals table, then roll back the transaction.
 BEGIN;
 DELETE FROM animals;
 ROLLBACK;
+
+SELECT * FROM animals;
 
 -- STARTNG A TRANSACTION:
 BEGIN;
@@ -49,6 +53,8 @@ BEGIN;
  -- Commit transaction
  COMMIT;
 
+ SELECT species FROM animals;
+
 
 -- How many animals are there?
 SELECT count(*) FROM animals;
@@ -61,4 +67,4 @@ SELECT neutered,MAX(escape_attempts) FROM animals GROUP BY neutered;
 -- What is the minimum and maximum weight of each type of animal?
 SELECT species, MAX(weight_kg), MIN(weight_kg) FROM animals GROUP BY species;
 -- What is the average number of escape attempts per animal type of those born between 1990 and 2000?
-SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-12-31' AND '2000-12-31' GROUP BY species;
+SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
