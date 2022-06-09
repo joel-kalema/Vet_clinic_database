@@ -22,21 +22,17 @@ BEGIN;
 UPDATE animals SET species = 'unspecified';
 ROLLBACK;
 
-SELECT species FROM animals;
-
 -- Update the animals table by setting the species column to digimon for all animals that have a name ending in mon.
 BEGIN;
 UPDATE animals SET species = 'digimon' WHERE name LIKE '%mon';
 -- Update the animals table by setting the species column to pokemon for all animals that don't have species already set.
-UPDATE animals SET species = NULL WHERE species = '';
+UPDATE animals SET species = 'digimon' WHERE species = '';
 -- Commit the transaction.
 COMMIT;
 -- Inside a transaction delete all records in the animals table, then roll back the transaction.
 BEGIN;
 DELETE FROM animals;
 ROLLBACK;
-
-SELECT * FROM animals;
 
 -- STARTNG A TRANSACTION:
 BEGIN;
@@ -53,8 +49,6 @@ BEGIN;
  -- Commit transaction
  COMMIT;
 
- SELECT species FROM animals;
-
 
 -- How many animals are there?
 SELECT count(*) FROM animals;
@@ -67,4 +61,48 @@ SELECT neutered,MAX(escape_attempts) FROM animals GROUP BY neutered;
 -- What is the minimum and maximum weight of each type of animal?
 SELECT species, MAX(weight_kg), MIN(weight_kg) FROM animals GROUP BY species;
 -- What is the average number of escape attempts per animal type of those born between 1990 and 2000?
-SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
+SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-12-31' AND '2000-12-31' GROUP BY species;
+
+-- What animals belong to Melody Pond?
+SELECT animals.name
+FROM animals
+JOIN owners ON owners.id = animals.owner_id 
+WHERE owners.full_name = 'Melody Pond';
+
+-- List of all animals that are pokemon (their type is Pokemon).
+SELECT animals.name
+FROM animals
+JOIN species ON species.id = animals.species_id 
+WHERE species.name = 'Pokemon';
+
+-- List all owners and their animals, remember to include those that don't own any animal.
+SELECT owners.full_name ,animals.name
+FROM animals
+RIGHT JOIN owners ON owners.id = animals.owner_id;
+
+-- How many animals are there per species?
+SELECT species.name, COUNT(*)
+FROM animals
+JOIN species ON animals.species_id = species.id
+GROUP BY (species.name);
+
+-- List all Digimon owned by Jennifer Orwell.
+SELECT owners.full_name, animals.name, species.name
+FROM animals
+JOIN owners ON owners.id = animals.owner_id
+JOIN species ON animals.species_id = species.id
+WHERE owners.full_name = 'Jennifer Orwell' AND species.name = 'Digimon';
+
+-- List all animals owned by Dean Winchester that haven't tried to escape.
+SELECT owners.full_name, animals.name, animals.escape_attempts
+FROM animals
+JOIN owners ON owners.id = animals.owner_id
+WHERE owners.full_name = 'Dean Winchester' AND animals.escape_attempts = 0;
+
+-- Who owns the most animals?
+SELECT owners.full_name, COUNT(animals.name)
+FROM animals
+JOIN owners ON animals.owner_id = owners.id
+GROUP BY (owners.full_name) 
+ORDER BY count DESC
+LIMIT 1;
