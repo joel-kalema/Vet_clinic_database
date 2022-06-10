@@ -19,6 +19,7 @@ CREATE TABLE owners (
 CREATE TABLE species (
     id BIGSERIAL PRIMARY KEY NOT NULL,
     name VARCHAR
+    species_id int,
 );
 
 -- Updating animals tables:
@@ -34,8 +35,26 @@ CREATE TABLE species (
 
 
 -- Create a table named vets
-CREATE TABLE vets(id SERIAL PRIMARY KEY NOT NULL,name VARCHAR(255), age INT,date_of_graduation date);
+CREATE TABLE vets(
+  id SERIAL PRIMARY KEY NOT NULL,
+  name VARCHAR(255), 
+  age INT, 
+  date_of_graduation date
+  );
 -- Create a table named specialization.
-CREATE TABLE specializations(id SERIAL PRIMARY KEY NOT NULL,vets_name VARCHAR(255), species_name VARCHAR(255));
+CREATE TABLE specializations(
+  id SERIAL PRIMARY KEY NOT NULL,
+  vets_name VARCHAR(255), 
+  species_name VARCHAR(255),
+  species_id int,
+  vet_id int
+  );
 -- Create a table named visits.
-CREATE TABLE visits(id SERIAL PRIMARY KEY NOT NULL,animals_name VARCHAR(255), vets_name VARCHAR(255),date_of_visit date);
+CREATE TABLE visits(
+  id SERIAL PRIMARY KEY NOT NULL,
+  animals_name VARCHAR(255), 
+  vets_name VARCHAR(255), 
+  date_of_visit date
+  animal_id int,
+  vet_id int,
+  );
