@@ -26,9 +26,11 @@ CREATE TABLE species (
   -- Removing column species
    ALTER TABLE animals
    DROP COLUMN species;
+
   -- Add column species_id which is a foreign key referencing species table
   ALTER TABLE animals
   ADD COLUMN species_id BIGINT REFERENCES species (id);
+  
   -- Add column owner_id which is a foreign key referencing the owners table
   ALTER TABLE animals
   ADD COLUMN owner_id BIGINT REFERENCES owners (id);
@@ -41,6 +43,7 @@ CREATE TABLE vets(
   age INT, 
   date_of_graduation date
   );
+
 -- Create a table named specialization.
 CREATE TABLE specializations(
   id SERIAL PRIMARY KEY NOT NULL,
@@ -49,6 +52,7 @@ CREATE TABLE specializations(
   species_id int,
   vet_id int
   );
+
 -- Create a table named visits.
 CREATE TABLE visits(
   id SERIAL PRIMARY KEY NOT NULL,
